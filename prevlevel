@@ -1,20 +1,4 @@
 #!/bin/sh
-
 current=$(id -un)
-
-case "$current" in
-    level1)
-        echo "You are already at the first level."
-        exit 0
-        ;;
-    level2|level3|level4|level5|level6|level7|level8|level9|level10)
-        number=${current#level}
-        previous=$((number - 1))
-        ;;
-    *)
-        echo "Run prevlevel from a level account." >&2
-        exit 1
-        ;;
-esac
-
-exec su - "level$previous"
+case "$current" in level1)echo 'You are already at the first level.';exit 0;;level[2-9]|level10)n=$((${current#level}-1));;*)echo 'Run prevlevel from a level account.' >&2;exit 1;;esac
+exec sudo -u "level$n" -i

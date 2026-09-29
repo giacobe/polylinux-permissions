@@ -1,30 +1,5 @@
 #!/bin/sh
-
-current=$(id -un)
-
-case "$current" in
-    level1|level2|level3|level4|level5|level6|level7|level8|level9|level10) ;;
-    *)
-        echo "Run validate from a level account." >&2
-        exit 1
-        ;;
-esac
-
-home="/home/$current"
-
-if [ ! -f "$home/README.txt" ]; then
-    echo "This level is not ready." >&2
-    exit 1
-fi
-
-# The key represents the current exercise state. It intentionally does not
-# report correct or incorrect. Paths are made relative to the level home.
-find "$home/company" -mindepth 1 -print 2>/dev/null |
-sort |
-while IFS= read -r path
-do
-    relative=${path#"$home"/}
-    stat -c "$relative|%F|%U|%G|%a|%s" "$path"
-done |
-sha256sum |
-awk '{ print "Your key is: " $1 }'
+current=$(id -un);case "$current" in level[1-9]|level10);;*)echo 'Run validate from a level account.' >&2;exit 1;;esac
+home=/home/$current
+[ -f "$home/README.txt" ]||{ echo 'This level is not ready.' >&2;exit 1;}
+find "$home/company" -mindepth 1 -print 2>/dev/null|sort|while IFS= read -r path;do relative=${path#"$home"/};stat -c "$relative|%F|%U|%G|%a|%s" "$path";done|sha256sum|awk '{print "Your key is: "$1}'
