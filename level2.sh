@@ -1,12 +1,8 @@
 #!/bin/sh
-set -eu
-cd /root
+cd "$INSTALL_ROOT" || exit 1
 . ./resources.sh
-derive_level_parameters
-begin_level
-mkdir -p "$LEVEL_WORK/departments/$DEPARTMENT";echo "Department plan" > "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT";chown "$TARGET_USER:$WRONG_DEPARTMENT" "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT";chmod 640 "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT"
-cat >> "$README_BUILD" <<TASK
-The file company/departments/$DEPARTMENT/$DOCUMENT belongs to the $DEPARTMENT department.
-Change only its group ownership to $DEPARTMENT.
-TASK
+derive_parameters
+mkdir -p "$LEVEL_HOME/departments/$DEPARTMENT";echo plan > "$LEVEL_HOME/departments/$DEPARTMENT/$DOCUMENT";chown "$TARGET_USER:$WRONG_DEPARTMENT" "$LEVEL_HOME/departments/$DEPARTMENT/$DOCUMENT";chmod 640 "$LEVEL_HOME/departments/$DEPARTMENT/$DOCUMENT"
+levelinstructions="Change only departments/$DEPARTMENT/$DOCUMENT group ownership to $DEPARTMENT. Run validate when finished and submit the printed key."
+format_block "$levelinstructions" >> "$readMeLocation"
 finish_level

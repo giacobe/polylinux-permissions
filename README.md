@@ -1,12 +1,10 @@
-# PolyLinux Permissions Lab v3
+# PolyLinux Users, Groups, and Permissions
 
-Extract all files, including `.profile`, directly into `/root`, then run `/root/install.sh` as root.
+This package follows the PolyLinux File Manipulation runtime contract:
 
-This revision:
-
-- uses real sudo and verified sysadmin membership;
-- builds all ten levels synchronously, so `nextlevel` cannot wait on a failed background builder;
-- installs `validate` globally and copies it into every level home so both `validate` and `./validate` work from the home directory;
-- emits a 20-character Base64 validation code rather than the raw SHA-256 hash;
-- uses a complete, syntax-checked `.profile`;
-- uses passwordless sudo navigation between level accounts.
+- `/root/.profile` is the one-time root bootstrap and runs `./install.sh`.
+- `/root/profile` is copied to each level account as `.profile`.
+- Level 1 becomes available first; remaining levels build concurrently.
+- `nextlevel` and `prevlevel` use the standard level-account navigation pattern.
+- `validate` fingerprints the current level home and prints an exact 10-character Base64 key without reporting correctness.
+- Real sudo is used for ownership, group, and permission administration.

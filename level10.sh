@@ -1,15 +1,8 @@
 #!/bin/sh
-set -eu
-cd /root
+cd "$INSTALL_ROOT" || exit 1
 . ./resources.sh
-derive_level_parameters
-begin_level
-mkdir -p "$LEVEL_WORK/company/$DEPARTMENT/$PROJECT" "$LEVEL_WORK/company/homes/$TARGET_USER";echo "Sensitive report" > "$LEVEL_WORK/company/$DEPARTMENT/$DOCUMENT";echo "Project plan" > "$LEVEL_WORK/company/$DEPARTMENT/$PROJECT/plan.txt";echo "Private notes" > "$LEVEL_WORK/company/homes/$TARGET_USER/notes.txt";chown root:"$DEPARTMENT" "$LEVEL_WORK/company/$DEPARTMENT";chmod 2750 "$LEVEL_WORK/company/$DEPARTMENT";chown "$TARGET_USER:$WRONG_DEPARTMENT" "$LEVEL_WORK/company/$DEPARTMENT/$DOCUMENT";chmod 646 "$LEVEL_WORK/company/$DEPARTMENT/$DOCUMENT";chown root:"$DEPARTMENT" "$LEVEL_WORK/company/$DEPARTMENT/$PROJECT";chmod 770 "$LEVEL_WORK/company/$DEPARTMENT/$PROJECT";chown "$TARGET_USER:$DEPARTMENT" "$LEVEL_WORK/company/$DEPARTMENT/$PROJECT/plan.txt";chmod 660 "$LEVEL_WORK/company/$DEPARTMENT/$PROJECT/plan.txt";chown -R "$TARGET_USER:$DEPARTMENT" "$LEVEL_WORK/company/homes/$TARGET_USER";chmod 755 "$LEVEL_WORK/company/homes/$TARGET_USER";chmod 600 "$LEVEL_WORK/company/homes/$TARGET_USER/notes.txt"
-cat >> "$README_BUILD" <<TASK
-Audit requirements:
-1. company/company/$DEPARTMENT/$DOCUMENT is $TARGET_USER:$DEPARTMENT mode 640.
-2. company/company/$DEPARTMENT/$PROJECT is root:$DEPARTMENT mode 2770.
-3. company/company/homes/$TARGET_USER retains ownership and has mode 700.
-Do not alter plan.txt or notes.txt.
-TASK
+derive_parameters
+mkdir -p "$LEVEL_HOME/company/$DEPARTMENT/$PROJECT" "$LEVEL_HOME/company/homes/$TARGET_USER";echo report > "$LEVEL_HOME/company/$DEPARTMENT/$DOCUMENT";echo plan > "$LEVEL_HOME/company/$DEPARTMENT/$PROJECT/plan.txt";echo notes > "$LEVEL_HOME/company/homes/$TARGET_USER/notes.txt";chown root:"$DEPARTMENT" "$LEVEL_HOME/company/$DEPARTMENT";chmod 2750 "$LEVEL_HOME/company/$DEPARTMENT";chown "$TARGET_USER:$WRONG_DEPARTMENT" "$LEVEL_HOME/company/$DEPARTMENT/$DOCUMENT";chmod 646 "$LEVEL_HOME/company/$DEPARTMENT/$DOCUMENT";chown root:"$DEPARTMENT" "$LEVEL_HOME/company/$DEPARTMENT/$PROJECT";chmod 770 "$LEVEL_HOME/company/$DEPARTMENT/$PROJECT";chown "$TARGET_USER:$DEPARTMENT" "$LEVEL_HOME/company/$DEPARTMENT/$PROJECT/plan.txt";chmod 660 "$LEVEL_HOME/company/$DEPARTMENT/$PROJECT/plan.txt";chown -R "$TARGET_USER:$DEPARTMENT" "$LEVEL_HOME/company/homes/$TARGET_USER";chmod 755 "$LEVEL_HOME/company/homes/$TARGET_USER";chmod 600 "$LEVEL_HOME/company/homes/$TARGET_USER/notes.txt"
+levelinstructions="Audit: company/$DEPARTMENT/$DOCUMENT must be $TARGET_USER:$DEPARTMENT mode 640; company/$DEPARTMENT/$PROJECT root:$DEPARTMENT mode 2770; company/homes/$TARGET_USER mode 700. Preserve plan.txt and notes.txt. Run validate when finished and submit the printed key."
+format_block "$levelinstructions" >> "$readMeLocation"
 finish_level

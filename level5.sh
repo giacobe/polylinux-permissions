@@ -1,11 +1,8 @@
 #!/bin/sh
-set -eu
-cd /root
+cd "$INSTALL_ROOT" || exit 1
 . ./resources.sh
-derive_level_parameters
-begin_level
-mkdir -p "$LEVEL_WORK/homes/$TARGET_USER/private";echo "Personal notes" > "$LEVEL_WORK/homes/$TARGET_USER/private/notes.txt";chown -R "$TARGET_USER:$DEPARTMENT" "$LEVEL_WORK/homes/$TARGET_USER";chmod 755 "$LEVEL_WORK/homes/$TARGET_USER";chmod 700 "$LEVEL_WORK/homes/$TARGET_USER/private";chmod 600 "$LEVEL_WORK/homes/$TARGET_USER/private/notes.txt"
-cat >> "$README_BUILD" <<TASK
-The simulated home directory company/homes/$TARGET_USER must be accessible only by $TARGET_USER. Repair only that directory mode.
-TASK
+derive_parameters
+mkdir -p "$LEVEL_HOME/homes/$TARGET_USER/private";echo notes > "$LEVEL_HOME/homes/$TARGET_USER/private/notes.txt";chown -R "$TARGET_USER:$DEPARTMENT" "$LEVEL_HOME/homes/$TARGET_USER";chmod 755 "$LEVEL_HOME/homes/$TARGET_USER";chmod 700 "$LEVEL_HOME/homes/$TARGET_USER/private";chmod 600 "$LEVEL_HOME/homes/$TARGET_USER/private/notes.txt"
+levelinstructions="Set homes/$TARGET_USER to mode 700 only. Run validate when finished and submit the printed key."
+format_block "$levelinstructions" >> "$readMeLocation"
 finish_level

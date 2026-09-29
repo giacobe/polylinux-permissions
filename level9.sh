@@ -1,11 +1,8 @@
 #!/bin/sh
-set -eu
-cd /root
+cd "$INSTALL_ROOT" || exit 1
 . ./resources.sh
-derive_level_parameters
-begin_level
-mkdir -p "$LEVEL_WORK/audit/$DEPARTMENT";echo "Quarterly data" > "$LEVEL_WORK/audit/$DEPARTMENT/$DOCUMENT";echo "Do not alter this control file" > "$LEVEL_WORK/audit/$DEPARTMENT/control.txt";chown root:"$DEPARTMENT" "$LEVEL_WORK/audit/$DEPARTMENT";chmod 2750 "$LEVEL_WORK/audit/$DEPARTMENT";chown root:root "$LEVEL_WORK/audit/$DEPARTMENT/$DOCUMENT";chmod 666 "$LEVEL_WORK/audit/$DEPARTMENT/$DOCUMENT";chown root:"$DEPARTMENT" "$LEVEL_WORK/audit/$DEPARTMENT/control.txt";chmod 440 "$LEVEL_WORK/audit/$DEPARTMENT/control.txt"
-cat >> "$README_BUILD" <<TASK
-Repair only company/audit/$DEPARTMENT/$DOCUMENT to $TARGET_USER:$DEPARTMENT with mode 640. Do not alter control.txt or the directory.
-TASK
+derive_parameters
+mkdir -p "$LEVEL_HOME/audit/$DEPARTMENT";echo data > "$LEVEL_HOME/audit/$DEPARTMENT/$DOCUMENT";echo control > "$LEVEL_HOME/audit/$DEPARTMENT/control.txt";chown root:"$DEPARTMENT" "$LEVEL_HOME/audit/$DEPARTMENT";chmod 2750 "$LEVEL_HOME/audit/$DEPARTMENT";chown root:root "$LEVEL_HOME/audit/$DEPARTMENT/$DOCUMENT";chmod 666 "$LEVEL_HOME/audit/$DEPARTMENT/$DOCUMENT";chown root:"$DEPARTMENT" "$LEVEL_HOME/audit/$DEPARTMENT/control.txt";chmod 440 "$LEVEL_HOME/audit/$DEPARTMENT/control.txt"
+levelinstructions="Repair only audit/$DEPARTMENT/$DOCUMENT to $TARGET_USER:$DEPARTMENT mode 640. Run validate when finished and submit the printed key."
+format_block "$levelinstructions" >> "$readMeLocation"
 finish_level

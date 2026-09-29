@@ -1,6 +1,2 @@
 #!/bin/sh
-set -eu
-current=$(id -un)
-case "$current" in level[1-9])next=$((${current#level}+1));;level10)echo "You are already at the final level.";exit 0;;*)echo "Run nextlevel from a level account." >&2;exit 1;;esac
-[ -f "/home/level$next/README.txt" ]||{ echo "Level $next is not ready." >&2;exit 1;}
-exec sudo -n -u "level$next" -i
+prefix=$(printf '%s\n' "$USER"|sed 's/[0-9]//g');number=$(printf '%s\n' "$USER"|sed 's/[^0-9]//g');[ -n "$number" ]||{ echo 'Could not determine the current level.';exit 1;};[ "$number" -lt 10 ]||{ echo 'You are already at the final level.';exit 0;};target=$prefix$(expr "$number" + 1);ready=/run/polylinux/polylinux-permissions/ready/$target;failed=/run/polylinux/polylinux-permissions/failed/$target;[ ! -f "$failed" ]||{ echo "$target failed to build.";exit 1;};[ -f "$ready" ]||echo "$target is still preparing; opening its pending page.";su - "$target"
