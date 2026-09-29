@@ -1,0 +1,26 @@
+#!/bin/sh
+
+current=$(id -un)
+
+case "$current" in
+    level1|level2|level3|level4|level5|level6|level7|level8|level9)
+        number=${current#level}
+        next=$((number + 1))
+        ;;
+    level10)
+        echo "You are already at the final level."
+        exit 0
+        ;;
+    *)
+        echo "Run nextlevel from a level account." >&2
+        exit 1
+        ;;
+esac
+
+while [ ! -f "/home/level$next/README.txt" ]
+do
+    echo "Level $next is not ready yet."
+    sleep 1
+done
+
+exec su - "level$next"

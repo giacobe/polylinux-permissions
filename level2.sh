@@ -1,6 +1,17 @@
 #!/bin/sh
-mkdir -p /home/level2/company
-cat > /home/level2/README.txt <<'EOF'
-LEVEL 2
-Use sudo commands to repair permissions, ownership, or groups for this level.
-EOF
+set -eu
+cd /root
+. ./resources.sh
+derive_level_parameters
+begin_level
+mkdir -p "$LEVEL_WORK/departments/$DEPARTMENT"
+printf '%s\n' "Department plan" > "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT"
+chown "$TARGET_USER:$DEPARTMENT" "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT"
+chmod 640 "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT"
+# Introduce the deterministic group defect.
+chgrp "$WRONG_DEPARTMENT" "$LEVEL_WORK/departments/$DEPARTMENT/$DOCUMENT"
+cat >> "$README_BUILD" <<TASK
+The file company/departments/$DEPARTMENT/$DOCUMENT belongs to the $DEPARTMENT department.
+Change only its group ownership to $DEPARTMENT.
+TASK
+finish_level
