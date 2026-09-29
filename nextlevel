@@ -1,5 +1,6 @@
 #!/bin/sh
+set -eu
 current=$(id -un)
-case "$current" in level[1-9])n=$((${current#level}+1));;level10)echo 'You are already at the final level.';exit 0;;*)echo 'Run nextlevel from a level account.' >&2;exit 1;;esac
-while [ ! -f "/home/level$n/README.txt" ];do echo "Level $n is not ready yet.";sleep 1;done
-exec sudo -u "level$n" -i
+case "$current" in level[1-9])next=$((${current#level}+1));;level10)echo "You are already at the final level.";exit 0;;*)echo "Run nextlevel from a level account." >&2;exit 1;;esac
+[ -f "/home/level$next/README.txt" ]||{ echo "Level $next is not ready." >&2;exit 1;}
+exec sudo -n -u "level$next" -i
