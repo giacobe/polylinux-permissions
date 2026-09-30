@@ -1,4 +1,20 @@
 #!/bin/sh
 set -eu
-state_hash(){ target=$1;find "$target" -mindepth 1 -print|sort|while IFS= read -r path;do ls -ldn "$path";done|sed -E 's/[[:space:]]+[A-Z][a-z]{2}[[:space:]]+[0-9]{1,2}[[:space:]][0-9]{2}:[0-9]{2}[[:space:]]+/ /;s/[[:space:]]+[A-Z][a-z]{2}[[:space:]]+[0-9]{1,2}[[:space:]][0-9]{4}[[:space:]]+/ /'|sha256sum|awk '{print $1}'|base64|tr -d '\r\n'|cut -c 1-10; }
-home=${POLYLINUX_VALIDATE_HOME:-/home/$USER};[ -d "$home" ]||{ echo "No level home was found for $USER." >&2;exit 1;};printf 'Your key is: %s\n' "$(state_hash "$home")"
+state_hash() {
+    target_dir=$1
+    find "$target_dir" -mindepth 1 -print |
+    sort |
+    while IFS= read -r path
+    do
+        ls -ldn "$path"
+    done |
+    sed -E 's/[[:space:]]+[A-Z][a-z]{2}[[:space:]]+[0-9]{1,2}[[:space:]][0-9]{2}:[0-9]{2}[[:space:]]+/ /;s/[[:space:]]+[A-Z][a-z]{2}[[:space:]]+[0-9]{1,2}[[:space:]][0-9]{4}[[:space:]]+/ /' |
+    sha256sum |
+    awk '{print $1}' |
+    base64 |
+    tr -d '\r\n' |
+    cut -c 1-10
+}
+level_home=${POLYLINUX_VALIDATE_HOME:-/home/$USER}
+[ -d "$level_home" ] || { echo "No level home was found for $USER." >&2; exit 1; }
+printf 'Your key is: %s\n' "$(state_hash "$level_home")"

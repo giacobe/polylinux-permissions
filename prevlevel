@@ -1,2 +1,6 @@
 #!/bin/sh
-prefix=$(printf '%s\n' "$USER"|sed 's/[0-9]//g');number=$(printf '%s\n' "$USER"|sed 's/[^0-9]//g');[ -n "$number" ]||{ echo 'Could not determine the current level.';exit 1;};[ "$number" -gt 1 ]||{ echo 'You are already at the lowest level.';exit 0;};su - "$prefix$(expr "$number" - 1)"
+level_prefix=$(printf '%s\n' "$USER" | sed 's/[0-9]//g')
+level_number=$(printf '%s\n' "$USER" | sed 's/[^0-9]//g')
+[ -n "$level_number" ] || { echo 'Could not determine the current level.'; exit 1; }
+[ "$level_number" -gt 1 ] || { echo 'You are already at the lowest level.'; exit 0; }
+su - "$level_prefix$(expr "$level_number" - 1)"

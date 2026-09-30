@@ -1,2 +1,6 @@
 #!/bin/sh
-prefix=$(printf '%s\n' "$USER"|sed 's/[0-9]//g');number=$(printf '%s\n' "$USER"|sed 's/[^0-9]//g');[ -n "$number" ]||{ echo 'Could not determine the current level.';exit 1;};[ "$number" -lt 10 ]||{ echo 'You are already at the final level.';exit 0;};target=$prefix$(expr "$number" + 1);ready=/run/polylinux/polylinux-permissions/ready/$target;failed=/run/polylinux/polylinux-permissions/failed/$target;[ ! -f "$failed" ]||{ echo "$target failed to build.";exit 1;};[ -f "$ready" ]||echo "$target is still preparing; opening its pending page.";su - "$target"
+level_prefix=$(printf '%s\n' "$USER" | sed 's/[0-9]//g')
+level_number=$(printf '%s\n' "$USER" | sed 's/[^0-9]//g')
+[ -n "$level_number" ] || { echo 'Could not determine the current level.'; exit 1; }
+[ "$level_number" -lt 10 ] || { echo 'You are already at the final level.'; exit 0; }
+su - "$level_prefix$(expr "$level_number" + 1)"
